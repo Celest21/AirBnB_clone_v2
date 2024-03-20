@@ -32,20 +32,46 @@ class HBNBCommand(cmd.Cmd):
         """Function that does nothing on ENTER."""
         pass
 
-    def do_create(self, line):
-        """Create a new instance of a specified class, save it, and print its id."""
-        args = shlex.split(line)
+    def do_create(self, arg):
+        """Create a new instance of a specified class with given parameters."""
+        args = shlex.split(arg)
         if len(args) == 0:
             print("** class name missing **")
             return
         class_name = args[0]
         valid_classes = ["BaseModel", "User", "State", "City", "Amenity", "Place", "Review"]
-        
+
         if class_name not in valid_classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = eval(class_name)()
+        if len(args) == 1:
+            print("** no attributes provided **")
+            return
+
+        params = {}
+        for item in args[1:]:
+            if "=" not in item:
+                continue
+            key, value = item.split("=")
+            # Handle string values with double quotes
+            if value.startswith('"') and value.endswith('"'):
+                value = value[1:-1].replace('_', ' ')
+            # Handle float values
+            elif "." in value:
+                try:
+                    value = float(value)
+                except ValueError:
+                    continue
+            # Handle integer values
+            else:
+                try:
+                    value = int(value)
+                except ValueError:
+                    continue
+            params[key] = value
+
+        new_instance = eval(class_name)(**params)
         new_instance.save()
         print(new_instance.id)
 
