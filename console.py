@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """The Command Line Interpreter."""
 
-from models.base_model import BaseModel
-import json
 import cmd
 import shlex
+import re
+from models.base_model import BaseModel
 from models.user import User
 from models.state import State
 from models.city import City
@@ -32,9 +32,9 @@ class HBNBCommand(cmd.Cmd):
         """Function that does nothing on ENTER."""
         pass
 
-    def do_create(self, arg):
+    def do_create(self, line):
         """Create a new instance of a specified class with given parameters."""
-        args = shlex.split(arg)
+        args = shlex.split(line)
         if len(args) == 0:
             print("** class name missing **")
             return
@@ -45,35 +45,24 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
 
-        if len(args) == 1:
-            print("** no attributes provided **")
-            return
-
+        # Extract parameters
         params = {}
-        for item in args[1:]:
-            if "=" not in item:
-                continue
-            key, value = item.split("=")
-            # Handle string values with double quotes
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1].replace('_', ' ')
-            # Handle float values
-            elif "." in value:
-                try:
-                    value = float(value)
-                except ValueError:
-                    continue
-            # Handle integer values
+        for param in args[1:]:
+            match = re.match(r'^(\w+)=(.+)$', param)
+            if match:
+                key = match.group(1)
+                value = match.group(2).replace('_', ' ').replace('\\"', '"')
+                params[key] = value
             else:
-                try:
-                    value = int(value)
-                except ValueError:
-                    continue
-            params[key] = value
+                print(f"Invalid parameter format: {param}")
 
-        new_instance = eval(class_name)(**params)
-        new_instance.save()
-        print(new_instance.id)
+        # Create instance with given parameters
+        try:
+            new_instance = eval(class_name)(**params)
+            new_instance.save()
+            print(new_instance.id)
+        except Exception as e:
+            print(f"Error creating instance: {str(e)}")
 
     def do_show(self, line):
         """Print the string representation of an instance based on the class name and id."""
@@ -177,3 +166,4 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
+
