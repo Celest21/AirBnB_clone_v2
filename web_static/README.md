@@ -1,16 +1,15 @@
-Airbnb Clone Console README
-
-Project Description
-This project is a command-line interface CLI designed to
-serve as a console for an Airbnb clone.
-The Airbnb clone console provides users with an interactive
-and efficient way to manage various aspects
-of the application, including handling properties,
-users, bookings.
-
-Command Interpreter
-The command interpreter is built using Python and is
-tailored specifically for managing the
-functionalities of an Airbnb clone.
-It allows users to perform operations such as creating
-handling user accounts.
+# 0x01. AirBnB clone - Web static
+At the end of this project you are expected to be able to explain to anyone, without the help of Google:
+* What is HTML?
+* How do you create an HTML page?
+* What is a markup language?
+* What is the DOM?
+* What is an element / tag?
+* What is an attribute?
+* How does the browser load a webpage?
+* What is CSS?
+* How do you add style to an element?
+* What is a class?
+* What is a selector?
+* How do you compute CSS Specificity Value?
+* What are Box properties in CSS?
